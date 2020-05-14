@@ -91,7 +91,7 @@ extension Environment {
         if defaults.value(forKey: Constants.Beta.indicatePasteAsPlainTextModifier) != nil {
             return defaults.bool(forKey: Constants.Beta.indicatePasteAsPlainTextModifier)
         } else {
-            return false
+            return true
         }
     }
 }
