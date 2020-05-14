@@ -1,10 +1,31 @@
 {
-  "commitish" : "4.5.0",
   "Mac" : [
     {
       "name" : "AEXML",
-      "hash" : "12b6115f08e40ab726ebb6f32bcc9cfda1501193c6091b2c35b82666b9905b7b",
-      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+      "hash" : "f919c1e23f4bbe439e82aa11c174414a27bac07a176c8b41adab6f1274e64d21",
+      "swiftToolchainVersion" : "5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
+    }
+  ],
+  "watchOS" : [
+    {
+      "name" : "AEXML",
+      "hash" : "ff0123241a8cf0b07ecffe972d75996aa114a2f6e239f7884912645c1b733708",
+      "swiftToolchainVersion" : "5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
+    }
+  ],
+  "tvOS" : [
+    {
+      "name" : "AEXML",
+      "hash" : "31417cb3f14e8212fa885adffd3fd42c24c61e49b6ac78169e7a1c9c5384c958",
+      "swiftToolchainVersion" : "5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
+    }
+  ],
+  "commitish" : "4.5.0",
+  "iOS" : [
+    {
+      "name" : "AEXML",
+      "hash" : "ea68f8f5acc2915b7a95b960981da21d49f5de65e8ada330175ca5d3b9948694",
+      "swiftToolchainVersion" : "5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
     }
   ]
 }
