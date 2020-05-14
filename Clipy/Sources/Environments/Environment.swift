@@ -85,6 +85,15 @@ extension Environment {
     var hidePinnedHistory: Bool {
         return pinHistoryEnabled && defaults.bool(forKey: Constants.Beta.hidePinnedHistory)
     }
+
+    // TODO: expose in preferences UI, currently enabled by default
+    var indicatePasteAsPlainTextModifier: Bool {
+        if defaults.value(forKey: Constants.Beta.indicatePasteAsPlainTextModifier) != nil {
+            return defaults.bool(forKey: Constants.Beta.indicatePasteAsPlainTextModifier)
+        } else {
+            return false
+        }
+    }
 }
 
 // MARK: Menu

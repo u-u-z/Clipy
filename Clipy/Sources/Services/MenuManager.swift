@@ -377,6 +377,8 @@ private extension MenuService {
     }
 
     func makeClipMenuItemForPasteAsPlainTextModifier(_ clip: CPYClip, index: Int, listNumber: Int) -> NSMenuItem? {
+        guard AppEnvironment.current.indicatePasteAsPlainTextModifier else { return nil }
+
         if AppEnvironment.current.pastePlainTextEnabled {
             // Highlight items if PasteAsPlainText modifier is pressed
             let alternativeMenuItem = makeClipMenuItem(clip, index: index, listNumber: listNumber)
