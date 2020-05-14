@@ -266,6 +266,8 @@ private extension MenuService {
         let clipResults = AppEnvironment.current.clipService.getAllHistoryClip()
         let currentSize = Int(clipResults.count)
         var i = 0
+        var mainLevelAdditionalPasteAsPlainTextItems = 0
+
         for clip in clipResults {
             if placeInLine < 1 || placeInLine - 1 < i {
                 // Folder
@@ -276,15 +278,26 @@ private extension MenuService {
                 }
 
                 // Clip
-                if let subMenu = menu.item(at: subMenuIndex)?.submenu {
+                if let subMenu = menu.item(at: subMenuIndex + mainLevelAdditionalPasteAsPlainTextItems)?.submenu {
                     let menuItem = makeClipMenuItem(clip, index: i, listNumber: listNumber)
                     subMenu.addItem(menuItem)
+
+                    if let alternativeMenuItem = makeClipMenuItemForPasteAsPlainTextModifier(clip, index: i, listNumber: listNumber) {
+                        subMenu.addItem(alternativeMenuItem)
+                    }
+
                     listNumber = incrementListNumber(listNumber, max: placeInsideFolder, start: firstIndex)
                 }
             } else {
                 // Clip
                 let menuItem = makeClipMenuItem(clip, index: i, listNumber: listNumber)
                 menu.addItem(menuItem)
+
+                if let alternativeMenuItem = makeClipMenuItemForPasteAsPlainTextModifier(clip, index: i, listNumber: listNumber) {
+                    menu.addItem(alternativeMenuItem)
+                    mainLevelAdditionalPasteAsPlainTextItems += 1
+                }
+
                 listNumber = incrementListNumber(listNumber, max: placeInLine, start: firstIndex)
             }
 
@@ -361,6 +374,32 @@ private extension MenuService {
         }
 
         return menuItem
+    }
+
+    func makeClipMenuItemForPasteAsPlainTextModifier(_ clip: CPYClip, index: Int, listNumber: Int) -> NSMenuItem? {
+        if AppEnvironment.current.pastePlainTextEnabled {
+            // Highlight items if PasteAsPlainText modifier is pressed
+            let alternativeMenuItem = makeClipMenuItem(clip, index: index, listNumber: listNumber)
+            if clip.thumbnailPath.isEmpty && !clip.isColorCode {
+                alternativeMenuItem.image = Asset.iconPlainText.image.iconize(true)
+            }
+
+            let pastePlainTextModifier = AppEnvironment.current.pastePlainTextModifier
+            if pastePlainTextModifier == 0 {
+                alternativeMenuItem.keyEquivalentModifierMask = .command    // this doesn't seem to work for some reason
+            } else if pastePlainTextModifier == 1 {
+                alternativeMenuItem.keyEquivalentModifierMask = .shift
+            } else if pastePlainTextModifier == 2 {
+                alternativeMenuItem.keyEquivalentModifierMask = .control
+            } else if pastePlainTextModifier == 3 {
+                alternativeMenuItem.keyEquivalentModifierMask = .option
+            }
+            alternativeMenuItem.isAlternate = true
+
+            return alternativeMenuItem
+        }
+
+        return nil
     }
 
     func addPinnedItems(_ menu: NSMenu) {
