@@ -85,6 +85,15 @@ extension Environment {
     var hidePinnedHistory: Bool {
         return pinHistoryEnabled && defaults.bool(forKey: Constants.Beta.hidePinnedHistory)
     }
+
+    // TODO: expose in preferences UI, currently enabled by default
+    var enableSearchInHistoryMenu: Bool {
+        if defaults.value(forKey: Constants.Beta.enableSearchInHistoryMenu) != nil {
+            return defaults.bool(forKey: Constants.Beta.enableSearchInHistoryMenu)
+        } else {
+            return true
+        }
+    }
 }
 
 // MARK: Menu
