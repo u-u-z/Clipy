@@ -285,16 +285,19 @@ private extension MenuService {
         var listNumber = firstIndex
         var subMenuCount = placeInLine
         var subMenuIndex = 1 + placeInLine
+        var mainLevelAdditionalSearchItems = 0
 
         // use searchQuery for history menu and if enabled in preferences
         var searchQuery = ""
         if menu.isKind(of: ClipyMenu.self) && AppEnvironment.current.enableSearchInHistoryMenu {
             searchQuery = self.searchQuery
+            mainLevelAdditionalSearchItems += 1  // extra separator menu item when search is enabled
         }
 
         let clipResults = AppEnvironment.current.clipService.getAllHistoryClip(searchQuery: searchQuery)
         let currentSize = Int(clipResults.count)
         var i = 0
+
         for clip in clipResults {
             if placeInLine < 1 || placeInLine - 1 < i {
                 // Folder
@@ -305,7 +308,7 @@ private extension MenuService {
                 }
 
                 // Clip
-                if let subMenu = menu.item(at: subMenuIndex)?.submenu {
+                if let subMenu = menu.item(at: subMenuIndex + mainLevelAdditionalSearchItems)?.submenu {
                     let menuItem = makeClipMenuItem(clip, index: i, listNumber: listNumber)
                     subMenu.addItem(menuItem)
                     listNumber = incrementListNumber(listNumber, max: placeInsideFolder, start: firstIndex)
