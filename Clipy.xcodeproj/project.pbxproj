@@ -61,6 +61,7 @@
 		CAFD12B01F207DBC00DF1CEB /* Observable+Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFD12AF1F207DBC00DF1CEB /* Observable+Void.swift */; };
 		E3F7C52D246DE81A0024BF82 /* ClipyMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7C52C246DE81A0024BF82 /* ClipyMenu.swift */; };
 		E3F7C52F246DECD30024BF82 /* ClipyMenuSearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7C52E246DECD30024BF82 /* ClipyMenuSearchTextField.swift */; };
+		E3F7C531246F12580024BF82 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7C530246F12580024BF82 /* Keys.swift */; };
 		FA08EDF81D1FED7D000D1D13 /* HotKeyServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA08EDF71D1FED7D000D1D13 /* HotKeyServiceSpec.swift */; };
 		FA0D5CE81DDCC61600AC9052 /* ClipService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0D5CE71DDCC61600AC9052 /* ClipService.swift */; };
 		FA10897D20EC22E200A3FEFC /* AssetsImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA10897B20EC22E200A3FEFC /* AssetsImages.swift */; };
@@ -272,6 +273,7 @@
 		E0249E96E4A5756ECE38FDC9 /* Pods-ClipyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClipyTests.debug.xcconfig"; path = "Target Support Files/Pods-ClipyTests/Pods-ClipyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E3F7C52C246DE81A0024BF82 /* ClipyMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClipyMenu.swift; sourceTree = "<group>"; };
 		E3F7C52E246DECD30024BF82 /* ClipyMenuSearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipyMenuSearchTextField.swift; sourceTree = "<group>"; };
+		E3F7C530246F12580024BF82 /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		FA08EDF71D1FED7D000D1D13 /* HotKeyServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HotKeyServiceSpec.swift; sourceTree = "<group>"; };
 		FA0D5CE71DDCC61600AC9052 /* ClipService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClipService.swift; sourceTree = "<group>"; };
 		FA10897B20EC22E200A3FEFC /* AssetsImages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsImages.swift; sourceTree = "<group>"; };
@@ -455,6 +457,7 @@
 		E3F7C52B246DE81A0024BF82 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				E3F7C530246F12580024BF82 /* Keys.swift */,
 				E3F7C52C246DE81A0024BF82 /* ClipyMenu.swift */,
 				E3F7C52E246DECD30024BF82 /* ClipyMenuSearchTextField.swift */,
 			);
@@ -960,6 +963,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC0DCEF1DE3255E00309C49 /* NSImage+NSColor.swift in Sources */,
+				E3F7C531246F12580024BF82 /* Keys.swift in Sources */,
 				FA1DB4A61DDCB443007F95C8 /* MenuType.swift in Sources */,
 				FA1DB4B31DDCB452007F95C8 /* Array+Remove.swift in Sources */,
 				FA3778931F3B691A003B5BAB /* AppEnvironment.swift in Sources */,

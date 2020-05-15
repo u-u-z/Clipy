@@ -23,7 +23,7 @@ final class MenuService: NSObject {
     // MARK: - Properties
     // Menus
     fileprivate var clipMenu: NSMenu?
-    fileprivate var historyMenu: ClipyMenu?
+    var historyMenu: ClipyMenu?
     fileprivate var snippetMenu: NSMenu?
     // StatusMenu
     fileprivate var statusItem: NSStatusItem?

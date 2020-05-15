@@ -24,8 +24,9 @@ class ClipyMenu: NSMenu, NSMenuDelegate {
     override init(title: String) {
         super.init(title: title)
         self.delegate = self
-        addSearchInputMenuItem()
+
         self.minimumWidth = 300
+        addSearchInputMenuItem()
     }
 
     private func highlight(_ itemToHighlight: NSMenuItem?) {
@@ -45,9 +46,16 @@ class ClipyMenu: NSMenu, NSMenuDelegate {
         let searchInputMenuItem = NSMenuItem()
         searchInputMenuItem.title = L10n.search
         searchInputMenuItem.view = searchInputMenuItemView
-        searchInputMenuItem.isEnabled = true
+        searchInputMenuItem.isEnabled = false
         self.addItem(searchInputMenuItem)
 
         self.addItem(NSMenuItem.separator())
+    }
+
+    func select() {
+        if let item = self.highlightedItem {
+            performActionForItem(at: index(of: item))
+            cancelTracking()
+        }
     }
 }
