@@ -42,6 +42,9 @@ final class MenuService: NSObject {
     fileprivate var clipToken: NotificationToken?
     fileprivate var snippetToken: NotificationToken?
 
+    // Search
+    var searchQuery: String = ""
+
     // MARK: - Enum Values
     enum StatusType: Int {
         case none, black, white
@@ -158,6 +161,13 @@ private extension MenuService {
                 self?.createClipMenu()
             })
             .disposed(by: disposeBag)
+
+        // Search Query Updated Notification
+        notificationCenter.rx.notification(Notification.Name(rawValue: Constants.Notification.searchQueryUpdated))
+            .subscribe(onNext: { [weak self] _ in
+                self?.reloadHistoryMenu()
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -187,6 +197,17 @@ private extension MenuService {
         clipMenu?.addItem(NSMenuItem(title: L10n.quitClipy, action: #selector(AppDelegate.terminate)))
 
         statusItem?.menu = clipMenu
+    }
+
+    // reload all items in history menu, i.e. after search query has changed
+    func reloadHistoryMenu() {
+        if let historyMenu = self.historyMenu {
+            // delete all items except the search query field and separator (items 0 and 1)
+            for (idx, item) in historyMenu.items.enumerated() where idx > 1 {
+                historyMenu.removeItem(item)
+            }
+            addHistoryItems(historyMenu)
+        }
     }
 
     func menuItemTitle(_ title: String, listNumber: NSInteger, isMarkWithNumber: Bool) -> String {
@@ -253,9 +274,11 @@ private extension MenuService {
         let maxHistory = AppEnvironment.current.defaults.integer(forKey: Constants.UserDefaults.maxHistorySize)
 
         // History title
-        let labelItem = NSMenuItem(title: L10n.history, action: nil)
-        labelItem.isEnabled = false
-        menu.addItem(labelItem)
+        if !menu.isKind(of: ClipyMenu.self) || !AppEnvironment.current.enableSearchInHistoryMenu {
+            let labelItem = NSMenuItem(title: L10n.history, action: nil)
+            labelItem.isEnabled = false
+            menu.addItem(labelItem)
+        }
 
         // History
         let firstIndex = firstIndexOfMenuItems()
@@ -263,7 +286,13 @@ private extension MenuService {
         var subMenuCount = placeInLine
         var subMenuIndex = 1 + placeInLine
 
-        let clipResults = AppEnvironment.current.clipService.getAllHistoryClip()
+        // use searchQuery for history menu and if enabled in preferences
+        var searchQuery = ""
+        if menu.isKind(of: ClipyMenu.self) && AppEnvironment.current.enableSearchInHistoryMenu {
+            searchQuery = self.searchQuery
+        }
+
+        let clipResults = AppEnvironment.current.clipService.getAllHistoryClip(searchQuery: searchQuery)
         let currentSize = Int(clipResults.count)
         var i = 0
         for clip in clipResults {

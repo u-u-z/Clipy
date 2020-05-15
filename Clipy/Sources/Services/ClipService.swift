@@ -95,14 +95,15 @@ final class ClipService {
         }
     }
 
-    func getAllHistoryClip() -> [CPYClip] {
+    func getAllHistoryClip(searchQuery: String = "") -> [CPYClip] {
         let sortByUpdateTime = AppEnvironment.current.reorderClipsAfterPasting
         let hidePinnedHistory = AppEnvironment.current.hidePinnedHistory
         let maxHistory = AppEnvironment.current.maxHistorySize
         let filter = hidePinnedHistory ? CPYClip.predicateNotPinned : CPYClip.predicateAny
+        let searchQueryFilter = !searchQuery.isEmpty ? NSPredicate(format: "title contains[cd] %@", searchQuery) : CPYClip.predicateAny
         let sortKeyPath = sortByUpdateTime ? #keyPath(CPYClip.updateTime) : #keyPath(CPYClip.createTime)
         let realm = try! Realm()
-        let clips = realm.objects(CPYClip.self).filter(filter).sorted(byKeyPath: sortKeyPath, ascending: false).prefix(maxHistory)
+        let clips = realm.objects(CPYClip.self).filter(filter).filter(searchQueryFilter).sorted(byKeyPath: sortKeyPath, ascending: false).prefix(maxHistory)
         if !sortByUpdateTime {
             return clips.reversed()
         }

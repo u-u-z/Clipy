@@ -91,6 +91,7 @@ struct Constants {
 
     struct Notification {
         static let closeSnippetEditor = "kCPYSnippetEditorWillCloseNotification"
+        static let searchQueryUpdated = "kCPYSnippetEditorSearchQueryUpdatedNotification"
     }
 
     struct Xml {
