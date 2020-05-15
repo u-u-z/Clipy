@@ -83,6 +83,7 @@ struct Constants {
         static let hidePinnedHistory = "kCPYBetaHidePinnedHistory"
         static let indicatePasteAsPlainTextModifier = "kCPYBetaIndicatePasteAsTextModifier"
         static let autoHighlightSecondHistoryItem = "kCPYBetaAutoHighlightSecondHistoryItem"
+        static let enableSearchInHistoryMenu = "kCPYBetaEnableSearchInHistoryMenu"
     }
 
     struct Update {
@@ -92,6 +93,7 @@ struct Constants {
 
     struct Notification {
         static let closeSnippetEditor = "kCPYSnippetEditorWillCloseNotification"
+        static let searchQueryUpdated = "kCPYSnippetEditorSearchQueryUpdatedNotification"
     }
 
     struct Xml {

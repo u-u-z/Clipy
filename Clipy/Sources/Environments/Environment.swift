@@ -102,6 +102,14 @@ extension Environment {
             return true
         }
     }
+
+    var enableSearchInHistoryMenu: Bool {
+        if defaults.value(forKey: Constants.Beta.enableSearchInHistoryMenu) != nil {
+            return defaults.bool(forKey: Constants.Beta.enableSearchInHistoryMenu)
+        } else {
+            return true
+        }
+    }
 }
 
 // MARK: Menu
