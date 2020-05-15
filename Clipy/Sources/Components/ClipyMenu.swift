@@ -30,8 +30,16 @@ class ClipyMenu: NSMenu, NSMenuDelegate {
 
     func menuWillOpen(_ menu: NSMenu) {
         if AppEnvironment.current.autoHighlightSecondHistoryItem {
+            var targetItem = 2
+            if AppEnvironment.current.enableSearchInHistoryMenu {
+                targetItem += 1
+            }
+            if AppEnvironment.current.indicatePasteAsPlainTextModifier {
+                targetItem += 1
+            }
+
             // highlight second item by default when showing menu
-            if let menuItem = self.item(at: 2) {
+            if let menuItem = self.item(at: targetItem) {
                 highlight(menuItem)
             }
         }
