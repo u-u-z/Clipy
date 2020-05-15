@@ -94,6 +94,14 @@ extension Environment {
             return true
         }
     }
+
+    var autoHighlightSecondHistoryItem: Bool {
+        if defaults.value(forKey: Constants.Beta.autoHighlightSecondHistoryItem) != nil {
+            return defaults.bool(forKey: Constants.Beta.autoHighlightSecondHistoryItem)
+        } else {
+            return true
+        }
+    }
 }
 
 // MARK: Menu

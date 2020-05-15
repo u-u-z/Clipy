@@ -23,7 +23,7 @@ final class MenuService: NSObject {
     // MARK: - Properties
     // Menus
     fileprivate var clipMenu: NSMenu?
-    fileprivate var historyMenu: NSMenu?
+    fileprivate var historyMenu: ClipyMenu?
     fileprivate var snippetMenu: NSMenu?
     // StatusMenu
     fileprivate var statusItem: NSStatusItem?
@@ -165,7 +165,7 @@ private extension MenuService {
 private extension MenuService {
      func createClipMenu() {
         clipMenu = NSMenu(title: Constants.Application.name)
-        historyMenu = NSMenu(title: Constants.Menu.history)
+        historyMenu = ClipyMenu(title: Constants.Menu.history)
         snippetMenu = NSMenu(title: Constants.Menu.snippet)
 
         addHistoryItems(clipMenu!)

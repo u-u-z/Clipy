@@ -82,6 +82,7 @@ struct Constants {
         static let pinHistoryModifier = "kCPYBetaPinHistoryModifier"
         static let hidePinnedHistory = "kCPYBetaHidePinnedHistory"
         static let indicatePasteAsPlainTextModifier = "kCPYBetaIndicatePasteAsTextModifier"
+        static let autoHighlightSecondHistoryItem = "kCPYBetaAutoHighlightSecondHistoryItem"
     }
 
     struct Update {
