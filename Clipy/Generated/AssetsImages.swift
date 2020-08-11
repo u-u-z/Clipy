@@ -20,6 +20,7 @@
 internal enum Asset {
   internal static let iconFolder = ImageAsset(name: "icon_folder")
   internal static let iconPin = ImageAsset(name: "icon_pin")
+  internal static let iconPlainText = ImageAsset(name: "icon_plainText")
   internal static let iconSnippet = ImageAsset(name: "icon_snippet")
   internal static let iconText = ImageAsset(name: "icon_text")
   internal static let prefBeta = ImageAsset(name: "pref_beta")

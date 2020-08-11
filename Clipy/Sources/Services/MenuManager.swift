@@ -23,7 +23,7 @@ final class MenuService: NSObject {
     // MARK: - Properties
     // Menus
     fileprivate var clipMenu: NSMenu?
-    fileprivate var historyMenu: NSMenu?
+    var historyMenu: ClipyMenu?
     fileprivate var snippetMenu: NSMenu?
     // StatusMenu
     fileprivate var statusItem: NSStatusItem?
@@ -41,6 +41,9 @@ final class MenuService: NSObject {
     fileprivate let realm = try! Realm()
     fileprivate var clipToken: NotificationToken?
     fileprivate var snippetToken: NotificationToken?
+
+    // Search
+    var searchQuery: String = ""
 
     // MARK: - Enum Values
     enum StatusType: Int {
@@ -158,6 +161,13 @@ private extension MenuService {
                 self?.createClipMenu()
             })
             .disposed(by: disposeBag)
+
+        // Search Query Updated Notification
+        notificationCenter.rx.notification(Notification.Name(rawValue: Constants.Notification.searchQueryUpdated))
+            .subscribe(onNext: { [weak self] _ in
+                self?.reloadHistoryMenu()
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -165,7 +175,7 @@ private extension MenuService {
 private extension MenuService {
      func createClipMenu() {
         clipMenu = NSMenu(title: Constants.Application.name)
-        historyMenu = NSMenu(title: Constants.Menu.history)
+        historyMenu = ClipyMenu(title: Constants.Menu.history)
         snippetMenu = NSMenu(title: Constants.Menu.snippet)
 
         addHistoryItems(clipMenu!)
@@ -187,6 +197,17 @@ private extension MenuService {
         clipMenu?.addItem(NSMenuItem(title: L10n.quitClipy, action: #selector(AppDelegate.terminate)))
 
         statusItem?.menu = clipMenu
+    }
+
+    // reload all items in history menu, i.e. after search query has changed
+    func reloadHistoryMenu() {
+        if let historyMenu = self.historyMenu {
+            // delete all items except the search query field and separator (items 0 and 1)
+            for (idx, item) in historyMenu.items.enumerated() where idx > 1 {
+                historyMenu.removeItem(item)
+            }
+            addHistoryItems(historyMenu)
+        }
     }
 
     func menuItemTitle(_ title: String, listNumber: NSInteger, isMarkWithNumber: Bool) -> String {
@@ -253,19 +274,31 @@ private extension MenuService {
         let maxHistory = AppEnvironment.current.defaults.integer(forKey: Constants.UserDefaults.maxHistorySize)
 
         // History title
-        let labelItem = NSMenuItem(title: L10n.history, action: nil)
-        labelItem.isEnabled = false
-        menu.addItem(labelItem)
+        if !menu.isKind(of: ClipyMenu.self) || !AppEnvironment.current.enableSearchInHistoryMenu {
+            let labelItem = NSMenuItem(title: L10n.history, action: nil)
+            labelItem.isEnabled = false
+            menu.addItem(labelItem)
+        }
 
         // History
         let firstIndex = firstIndexOfMenuItems()
         var listNumber = firstIndex
         var subMenuCount = placeInLine
         var subMenuIndex = 1 + placeInLine
+        var mainLevelAdditionalSearchItems = 0
+        var mainLevelAdditionalPasteAsPlainTextItems = 0
 
-        let clipResults = AppEnvironment.current.clipService.getAllHistoryClip()
+        // use searchQuery for history menu and if enabled in preferences
+        var searchQuery = ""
+        if menu.isKind(of: ClipyMenu.self) && AppEnvironment.current.enableSearchInHistoryMenu {
+            searchQuery = self.searchQuery
+            mainLevelAdditionalSearchItems += 1  // extra separator menu item when search is enabled
+        }
+
+        let clipResults = AppEnvironment.current.clipService.getAllHistoryClip(searchQuery: searchQuery)
         let currentSize = Int(clipResults.count)
         var i = 0
+
         for clip in clipResults {
             if placeInLine < 1 || placeInLine - 1 < i {
                 // Folder
@@ -276,15 +309,26 @@ private extension MenuService {
                 }
 
                 // Clip
-                if let subMenu = menu.item(at: subMenuIndex)?.submenu {
+                if let subMenu = menu.item(at: subMenuIndex + mainLevelAdditionalSearchItems + mainLevelAdditionalPasteAsPlainTextItems)?.submenu {
                     let menuItem = makeClipMenuItem(clip, index: i, listNumber: listNumber)
                     subMenu.addItem(menuItem)
+
+                    if let alternativeMenuItem = makeClipMenuItemForPasteAsPlainTextModifier(clip, index: i, listNumber: listNumber) {
+                        subMenu.addItem(alternativeMenuItem)
+                    }
+
                     listNumber = incrementListNumber(listNumber, max: placeInsideFolder, start: firstIndex)
                 }
             } else {
                 // Clip
                 let menuItem = makeClipMenuItem(clip, index: i, listNumber: listNumber)
                 menu.addItem(menuItem)
+
+                if let alternativeMenuItem = makeClipMenuItemForPasteAsPlainTextModifier(clip, index: i, listNumber: listNumber) {
+                    menu.addItem(alternativeMenuItem)
+                    mainLevelAdditionalPasteAsPlainTextItems += 1
+                }
+
                 listNumber = incrementListNumber(listNumber, max: placeInLine, start: firstIndex)
             }
 
@@ -361,6 +405,34 @@ private extension MenuService {
         }
 
         return menuItem
+    }
+
+    func makeClipMenuItemForPasteAsPlainTextModifier(_ clip: CPYClip, index: Int, listNumber: Int) -> NSMenuItem? {
+        guard AppEnvironment.current.indicatePasteAsPlainTextModifier else { return nil }
+
+        if AppEnvironment.current.pastePlainTextEnabled {
+            // Highlight items if PasteAsPlainText modifier is pressed
+            let alternativeMenuItem = makeClipMenuItem(clip, index: index, listNumber: listNumber)
+            if clip.thumbnailPath.isEmpty && !clip.isColorCode {
+                alternativeMenuItem.image = Asset.iconPlainText.image.iconize(true)
+            }
+
+            let pastePlainTextModifier = AppEnvironment.current.pastePlainTextModifier
+            if pastePlainTextModifier == 0 {
+                alternativeMenuItem.keyEquivalentModifierMask = .command    // this doesn't seem to work for some reason
+            } else if pastePlainTextModifier == 1 {
+                alternativeMenuItem.keyEquivalentModifierMask = .shift
+            } else if pastePlainTextModifier == 2 {
+                alternativeMenuItem.keyEquivalentModifierMask = .control
+            } else if pastePlainTextModifier == 3 {
+                alternativeMenuItem.keyEquivalentModifierMask = .option
+            }
+            alternativeMenuItem.isAlternate = true
+
+            return alternativeMenuItem
+        }
+
+        return nil
     }
 
     func addPinnedItems(_ menu: NSMenu) {

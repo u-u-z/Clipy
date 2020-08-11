@@ -85,6 +85,31 @@ extension Environment {
     var hidePinnedHistory: Bool {
         return pinHistoryEnabled && defaults.bool(forKey: Constants.Beta.hidePinnedHistory)
     }
+
+    // TODO: expose in preferences UI, currently enabled by default
+    var indicatePasteAsPlainTextModifier: Bool {
+        if defaults.value(forKey: Constants.Beta.indicatePasteAsPlainTextModifier) != nil {
+            return defaults.bool(forKey: Constants.Beta.indicatePasteAsPlainTextModifier)
+        } else {
+            return true
+        }
+    }
+
+    var autoHighlightSecondHistoryItem: Bool {
+        if defaults.value(forKey: Constants.Beta.autoHighlightSecondHistoryItem) != nil {
+            return defaults.bool(forKey: Constants.Beta.autoHighlightSecondHistoryItem)
+        } else {
+            return true
+        }
+    }
+
+    var enableSearchInHistoryMenu: Bool {
+        if defaults.value(forKey: Constants.Beta.enableSearchInHistoryMenu) != nil {
+            return defaults.bool(forKey: Constants.Beta.enableSearchInHistoryMenu)
+        } else {
+            return true
+        }
+    }
 }
 
 // MARK: Menu
