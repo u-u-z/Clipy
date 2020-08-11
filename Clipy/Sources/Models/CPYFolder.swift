@@ -55,7 +55,7 @@ extension CPYFolder {
 extension CPYFolder {
     func createSnippet() -> CPYSnippet {
         let snippet = CPYSnippet()
-        snippet.title = "untitled snippet"
+        snippet.title = "未命名片段"
         snippet.index = Int(snippets.count)
         return snippet
     }
@@ -89,7 +89,7 @@ extension CPYFolder {
     static func create() -> CPYFolder {
         let realm = try! Realm()
         let folder = CPYFolder()
-        folder.title = "untitled folder"
+        folder.title = "未命名目录"
         let lastFolder = realm.objects(CPYFolder.self).sorted(byKeyPath: #keyPath(CPYFolder.index), ascending: true).last
         folder.index = lastFolder?.index ?? -1
         folder.index += 1
